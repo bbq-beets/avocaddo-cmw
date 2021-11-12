@@ -39,6 +39,10 @@ on:
       play-store-creds:
         description: 'Your Play Store credentials'
         required: true
+    outputs:
+      workflow_output:
+        description: An output
+        value: ${{ jobs.deploy.outputs.job_output }}
 
 jobs:
   deploy:
@@ -48,6 +52,8 @@ jobs:
       MOBILE_CI_CD_DIR: ${{ github.WORKSPACE }}/mobile-ci-cd
       PROJECT_ROOT: ${{ github.WORKSPACE }}/caller-repo
       SECRETS_DIR: ${{ github.WORKSPACE }}/secrets
+    outputs:
+      job_output: ${{ steps.my_step.outputs.step_output }}
     steps:
       - name: Check out caller repository
         uses: actions/checkout@v2
@@ -164,4 +170,5 @@ jobs:
           git add $FASTLANEDIR/Pluginfile
           git commit -m "Configure fastlane"
           # TODO push
-
+      - run: echo "::set-output name=step_output::a_step_output"
+        id: my_step
